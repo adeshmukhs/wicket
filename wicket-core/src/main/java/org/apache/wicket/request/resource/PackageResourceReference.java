@@ -43,6 +43,8 @@ public class PackageResourceReference extends ResourceReference
 	private static final String JAVASCRIPT_EXTENSION = "js";
 
 	private transient ConcurrentMap<UrlAttributes, UrlAttributes> urlAttributesCacheMap;
+	
+	private boolean readPartially = false;
 
 	/**
 	 * Cache for existence of minified version of the resource to avoid repetitive calls
@@ -117,17 +119,17 @@ public class PackageResourceReference extends ResourceReference
 		if (CSS_EXTENSION.equals(extension))
 		{
 			resource = new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation());
+				getVariation()).readPartially(readPartially);
 		}
 		else if (JAVASCRIPT_EXTENSION.equals(extension))
 		{
 			resource = new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation());
+				getVariation()).readPartially(readPartially);
 		}
 		else
 		{
 			resource = new PackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation());
+				getVariation()).readPartially(readPartially);
 		}
 
 		removeCompressFlagIfUnnecessary(resource);
@@ -272,5 +274,18 @@ public class PackageResourceReference extends ResourceReference
 		}
 
 		return value;
+	}
+	
+	/**
+	 * If the packaage resource should be read partially
+	 * 
+	 * @param readPartially
+	 *            if the package resource should be read partially
+	 * @return the current package resource
+	 */
+	public PackageResourceReference readPartially(boolean readPartially)
+	{
+		this.readPartially = readPartially;
+		return this;
 	}
 }

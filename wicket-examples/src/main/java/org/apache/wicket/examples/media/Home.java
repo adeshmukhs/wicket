@@ -50,7 +50,7 @@ public final class Home extends WicketExamplePage
 		// Internal video with several options
 
 		Video video1 = new Video("video1", new PackageResourceReference(Home.class,
-			"video.mp4"));
+			"video.mp4").readPartially(true));
 		video1.setAutoplay(false);
 		video1.setControls(true);
 		video1.setLooping(false);
