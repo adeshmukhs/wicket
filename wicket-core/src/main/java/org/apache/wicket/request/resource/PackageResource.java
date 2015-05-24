@@ -354,9 +354,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			}
 			finally
 			{
+
 				try
 				{
-					resourceStream.close();
+					if (!readPartially)
+					{
+						IOUtils.close(resourceStream);
+					}
 				}
 				catch (IOException e)
 				{
