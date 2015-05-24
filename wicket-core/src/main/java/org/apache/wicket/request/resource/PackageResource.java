@@ -146,6 +146,9 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 */
 	private String textEncoding = null;
 
+	/**
+	 * Reads the resource partially - the content is not copied into memory
+	 */
 	private boolean readPartially = false;
 
 	/**
