@@ -30,8 +30,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This is a ResourceReference that knows how to find and serve resources located in the
- * Java package (i.e. next to the class files).
+ * This is a ResourceReference that knows how to find and serve resources located in the Java
+ * package (i.e. next to the class files).
+ * 
+ * @author Tobias Soloschenko
  */
 public class PackageResourceReference extends ResourceReference
 {
@@ -43,16 +45,15 @@ public class PackageResourceReference extends ResourceReference
 	private static final String JAVASCRIPT_EXTENSION = "js";
 
 	private transient ConcurrentMap<UrlAttributes, UrlAttributes> urlAttributesCacheMap;
-	
+
 	private boolean readPartially = false;
 
 	/**
-	 * Cache for existence of minified version of the resource to avoid repetitive calls
-	 * to org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate() and
+	 * Cache for existence of minified version of the resource to avoid repetitive calls to
+	 * org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate() and
 	 * #getMinifiedName().
 	 */
-	private static final ConcurrentMap<PackageResourceReference, String> MINIFIED_NAMES_CACHE
-			= Generics.newConcurrentHashMap();
+	private static final ConcurrentMap<PackageResourceReference, String> MINIFIED_NAMES_CACHE = Generics.newConcurrentHashMap();
 
 	/**
 	 * A constant used to indicate that there is no minified version of the resource.
@@ -123,8 +124,8 @@ public class PackageResourceReference extends ResourceReference
 		}
 		else if (JAVASCRIPT_EXTENSION.equals(extension))
 		{
-			resource = new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation()).readPartially(readPartially);
+			resource = new JavaScriptPackageResource(getScope(), getName(), getLocale(),
+				getStyle(), getVariation()).readPartially(readPartially);
 		}
 		else
 		{
@@ -138,13 +139,14 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	/**
-	 * Method allowing to remove the compress flag if the resource has been detected as a minified one
-	 * (i.e. ending with .min.EXT)
-	 * This method is to be called by subclasses overriding <code>getResource</code>
-	 * if they want to rely on default minification detection handling
+	 * Method allowing to remove the compress flag if the resource has been detected as a minified
+	 * one (i.e. ending with .min.EXT) This method is to be called by subclasses overriding
+	 * <code>getResource</code> if they want to rely on default minification detection handling
 	 *
 	 * see WICKET-5250 for further explanation
-	 * @param resource resource to check
+	 * 
+	 * @param resource
+	 *            resource to check
 	 */
 	protected final void removeCompressFlagIfUnnecessary(final PackageResource resource)
 	{
@@ -155,7 +157,8 @@ public class PackageResourceReference extends ResourceReference
 		}
 	}
 
-	private ResourceReference.UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
+	private ResourceReference.UrlAttributes getUrlAttributes(Locale locale, String style,
+		String variation)
 	{
 		IResourceStreamLocator locator = Application.get()
 			.getResourceSettings()
@@ -169,7 +172,8 @@ public class PackageResourceReference extends ResourceReference
 		if (stream == null)
 			return new ResourceReference.UrlAttributes(null, null, null);
 
-		return new ResourceReference.UrlAttributes(stream.getLocale(), stream.getStyle(), stream.getVariation());
+		return new ResourceReference.UrlAttributes(stream.getLocale(), stream.getStyle(),
+			stream.getVariation());
 	}
 
 	private Locale getCurrentLocale()
@@ -184,8 +188,9 @@ public class PackageResourceReference extends ResourceReference
 
 	/**
 	 * Initializes the cache for the existence of the minified resource.
+	 * 
 	 * @return the name of the minified resource or the special constant {@link #NO_MINIFIED_NAME}
-	 * if there is no minified version
+	 *         if there is no minified version
 	 */
 	private String internalGetMinifiedName()
 	{
@@ -197,18 +202,18 @@ public class PackageResourceReference extends ResourceReference
 
 		String name = getMinifiedName();
 		IResourceStreamLocator locator = Application.get()
-				.getResourceSettings()
-				.getResourceStreamLocator();
+			.getResourceSettings()
+			.getResourceStreamLocator();
 		String absolutePath = Packages.absolutePath(getScope(), name);
 		IResourceStream stream = locator.locate(getScope(), absolutePath, getStyle(),
-				getVariation(), getLocale(), null, true);
+			getVariation(), getLocale(), null, true);
 
 		minifiedName = stream != null ? name : NO_MINIFIED_NAME;
 		MINIFIED_NAMES_CACHE.put(this, minifiedName);
 		if (minifiedName == NO_MINIFIED_NAME && log.isDebugEnabled())
 		{
 			log.debug("No minified version of '" + super.getName() +
-					"' found, expected a file with the name '" + name + "', using full version");
+				"' found, expected a file with the name '" + name + "', using full version");
 		}
 		return minifiedName;
 	}
@@ -233,7 +238,8 @@ public class PackageResourceReference extends ResourceReference
 	{
 		String name = null;
 
-		if (Application.exists() && Application.get().getResourceSettings().getUseMinifiedResources())
+		if (Application.exists() &&
+			Application.get().getResourceSettings().getUseMinifiedResources())
 		{
 			String minifiedName = internalGetMinifiedName();
 			if (minifiedName != NO_MINIFIED_NAME)
@@ -256,7 +262,8 @@ public class PackageResourceReference extends ResourceReference
 		String style = getCurrentStyle();
 		String variation = getVariation();
 
-		ResourceReference.UrlAttributes key = new ResourceReference.UrlAttributes(locale, style, variation);
+		ResourceReference.UrlAttributes key = new ResourceReference.UrlAttributes(locale, style,
+			variation);
 
 		if (urlAttributesCacheMap == null)
 		{
@@ -275,9 +282,15 @@ public class PackageResourceReference extends ResourceReference
 
 		return value;
 	}
-	
+
 	/**
-	 * If the packaage resource should be read partially
+	 * If the packaage resource should be read partially.<br>
+	 * <br>
+	 * WARNING - if the stream is read partially compressors will not work, because they require the
+	 * whole content to be read <br>
+	 * ({@link org.apache.wicket.javascript.IJavaScriptCompressor}, <br>
+	 * {@link org.apache.wicket.css.ICssCompressor}, <br>
+	 * {@link org.apache.wicket.resource.IScopeAwareTextResourceProcessor})
 	 * 
 	 * @param readPartially
 	 *            if the package resource should be read partially

@@ -69,6 +69,7 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
  * @author Matej Knopp
+ * @author Tobias Soloschenko
  */
 public class PackageResource extends AbstractResource implements IStaticCacheableResource
 {
@@ -740,7 +741,12 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	}
 
 	/**
-	 * If the packaage resource should be read partially
+	 * If the packaage resource should be read partially.<br>
+	 * <br>
+	 * WARNING - if the stream is read partially compressors will not work, because they require the
+	 * whole content to be read <br>({@link org.apache.wicket.javascript.IJavaScriptCompressor},
+	 * <br>{@link org.apache.wicket.css.ICssCompressor},
+	 * <br>{@link org.apache.wicket.resource.IScopeAwareTextResourceProcessor})
 	 * 
 	 * @param readPartially
 	 *            if the package resource should be read partially
