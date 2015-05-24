@@ -209,12 +209,23 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		return style;
 	}
 
+	/**
+	 * Returns true if the caching for this resource is enabled
+	 * 
+	 * @return if the caching is enabled
+	 */
 	@Override
 	public boolean isCachingEnabled()
 	{
 		return cachingEnabled;
 	}
 
+	/**
+	 * Sets the caching for this resource to be enabled
+	 * 
+	 * @param enabled
+	 *            if the cacheing should be enabled
+	 */
 	public void setCachingEnabled(final boolean enabled)
 	{
 		this.cachingEnabled = enabled;
@@ -747,9 +758,10 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * If the packaage resource should be read partially.<br>
 	 * <br>
 	 * WARNING - if the stream is read partially compressors will not work, because they require the
-	 * whole content to be read <br>({@link org.apache.wicket.javascript.IJavaScriptCompressor},
-	 * <br>{@link org.apache.wicket.css.ICssCompressor},
-	 * <br>{@link org.apache.wicket.resource.IScopeAwareTextResourceProcessor})
+	 * whole content to be read <br>
+	 * ({@link org.apache.wicket.javascript.IJavaScriptCompressor}, <br>
+	 * {@link org.apache.wicket.css.ICssCompressor}, <br>
+	 * {@link org.apache.wicket.resource.IScopeAwareTextResourceProcessor})
 	 * 
 	 * @param readPartially
 	 *            if the package resource should be read partially
