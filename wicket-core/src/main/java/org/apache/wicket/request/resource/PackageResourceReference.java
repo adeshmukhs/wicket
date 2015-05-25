@@ -47,9 +47,9 @@ public class PackageResourceReference extends ResourceReference
 	private transient ConcurrentMap<UrlAttributes, UrlAttributes> urlAttributesCacheMap;
 
 	/**
-	 * Reads the resource partially - the content is not copied into memory
+	 * Reads the resource buffered - the content is not copied into memory
 	 */
-	private boolean readPartially = false;
+	private boolean readBuffered = true;
 
 	/**
 	 * Cache for existence of minified version of the resource to avoid repetitive calls to
@@ -123,17 +123,17 @@ public class PackageResourceReference extends ResourceReference
 		if (CSS_EXTENSION.equals(extension))
 		{
 			resource = new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation()).readPartially(readPartially);
+				getVariation()).readBuffered(readBuffered);
 		}
 		else if (JAVASCRIPT_EXTENSION.equals(extension))
 		{
 			resource = new JavaScriptPackageResource(getScope(), getName(), getLocale(),
-				getStyle(), getVariation()).readPartially(readPartially);
+				getStyle(), getVariation()).readBuffered(readBuffered);
 		}
 		else
 		{
 			resource = new PackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation()).readPartially(readPartially);
+				getVariation()).readBuffered(readBuffered);
 		}
 
 		removeCompressFlagIfUnnecessary(resource);
@@ -287,21 +287,21 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	/**
-	 * If the packaage resource should be read partially.<br>
+	 * If the package resource should be read buffered.<br>
 	 * <br>
-	 * WARNING - if the stream is read partially compressors will not work, because they require the
-	 * whole content to be read <br>
+	 * WARNING - if the stream is not read buffered compressors will not work, because they require the
+	 * whole content to be read into memory.<br>
 	 * ({@link org.apache.wicket.javascript.IJavaScriptCompressor}, <br>
 	 * {@link org.apache.wicket.css.ICssCompressor}, <br>
 	 * {@link org.apache.wicket.resource.IScopeAwareTextResourceProcessor})
 	 * 
-	 * @param readPartially
-	 *            if the package resource should be read partially
+	 * @param readBuffered
+	 *            if the package resource should be read buffered
 	 * @return the current package resource
 	 */
-	public PackageResourceReference readPartially(boolean readPartially)
+	public PackageResourceReference readBuffered(boolean readBuffered)
 	{
-		this.readPartially = readPartially;
+		this.readBuffered = readBuffered;
 		return this;
 	}
 }

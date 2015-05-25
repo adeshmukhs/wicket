@@ -147,9 +147,9 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private String textEncoding = null;
 
 	/**
-	 * Reads the resource partially - the content is not copied into memory
+	 * Reads the resource buffered - the content is not copied into memory
 	 */
-	private boolean readPartially = false;
+	private boolean readBuffered = true;
 
 	/**
 	 * Hidden constructor.
@@ -338,14 +338,14 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 				byte[] bytes = null;
 				// send Content-Length header
-				if (readPartially)
-				{
-					resourceResponse.setContentLength(resourceStream.length().bytes());
-				}
-				else
+				if (readBuffered)
 				{
 					bytes = IOUtils.toByteArray(inputStream);
 					resourceResponse.setContentLength(new Long(bytes.length));
+				}
+				else
+				{
+					resourceResponse.setContentLength(resourceStream.length().bytes());
 				}
 
 				// get content range information
@@ -372,7 +372,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 				try
 				{
-					if (!readPartially)
+					if (readBuffered)
 					{
 						IOUtils.close(resourceStream);
 					}
@@ -528,7 +528,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			byte[] bytes = null;
 			InputStream inputStream = super.getInputStream();
 
-			if (!readPartially)
+			if (readBuffered)
 			{
 				try
 				{
@@ -755,21 +755,21 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	}
 
 	/**
-	 * If the packaage resource should be read partially.<br>
+	 * If the package resource should be read buffered.<br>
 	 * <br>
-	 * WARNING - if the stream is read partially compressors will not work, because they require the
-	 * whole content to be read <br>
+	 * WARNING - if the stream is not read buffered compressors will not work, because they require the
+	 * whole content to be read into memory.<br>
 	 * ({@link org.apache.wicket.javascript.IJavaScriptCompressor}, <br>
 	 * {@link org.apache.wicket.css.ICssCompressor}, <br>
 	 * {@link org.apache.wicket.resource.IScopeAwareTextResourceProcessor})
 	 * 
-	 * @param readPartially
-	 *            if the package resource should be read partially
+	 * @param readBuffered
+	 *            if the package resource should be read buffered
 	 * @return the current package resource
 	 */
-	public PackageResource readPartially(boolean readPartially)
+	public PackageResource readBuffered(boolean readBuffered)
 	{
-		this.readPartially = readPartially;
+		this.readBuffered = readBuffered;
 		return this;
 	}
 }
