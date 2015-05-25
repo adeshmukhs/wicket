@@ -908,7 +908,6 @@ public abstract class AbstractResource implements IResource
 					'-' + endbyte + '/' + contentLength);
 				// WARNING - DO NOT SET THE CONTENT LENGTH, even if it is calculated right - 
 				// SAFARI / CHROME are causing issues otherwise!
-				// content length must be overridden by the recalculated one
 				// webResponse.setContentLength((endbyte - startbyte) + 1);
 
 				// content range has been applied do not set the content length again!
