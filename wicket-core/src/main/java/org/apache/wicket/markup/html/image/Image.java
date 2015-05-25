@@ -595,7 +595,7 @@ public class Image extends WebComponent implements IResourceListener
 	 * <b>USE_CREDENTIALS</b>: Cross-origin CORS requests for the element will have the credentials
 	 * flag set.<br>
 	 * <br>
-	 * <b>NO_CORES</b>: The empty string is also a valid keyword, and maps to the Anonymous state.
+	 * <b>NO_CORS</b>: The empty string is also a valid keyword, and maps to the Anonymous state.
 	 * The attribute's invalid value default is the Anonymous state. The missing value default, used
 	 * when the attribute is omitted, is the No CORS state
 	 *
