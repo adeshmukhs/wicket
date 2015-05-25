@@ -47,7 +47,7 @@ public class PackageResourceReference extends ResourceReference
 	private transient ConcurrentMap<UrlAttributes, UrlAttributes> urlAttributesCacheMap;
 
 	/**
-	 * Reads the resource buffered - the content is not copied into memory
+	 * Reads the resource buffered - the content is copied into memory
 	 */
 	private boolean readBuffered = true;
 

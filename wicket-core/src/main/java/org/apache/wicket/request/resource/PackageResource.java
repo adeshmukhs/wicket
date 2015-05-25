@@ -147,7 +147,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private String textEncoding = null;
 
 	/**
-	 * Reads the resource buffered - the content is not copied into memory
+	 * Reads the resource buffered - the content is copied into memory
 	 */
 	private boolean readBuffered = true;
 
